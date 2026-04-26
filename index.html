@@ -1,320 +1,474 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FLAME PREP</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+  <title>FLAME PREP • Jordan's BK grind</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;600;700&family=Barlow+Condensed:wght@700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --fire: #FF6B00;
+      --flame: #FF3D00;
+      --gold: #FFB800;
+      --dark: #0D0D0D;
+      --card-bg: #1A1410;
+      --red: #C8102E;
+      --text: #F5EFE6;
+      --muted: #8A7A6A;
+    }
 
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;600;700&family=Barlow+Condensed:wght@700;900&display=swap" rel="stylesheet">
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
-<style>
-body {
-  font-family: 'Barlow', sans-serif;
-  background: #0D0D0D;
-  color: #F5EFE6;
-  max-width: 480px;
-  margin: auto;
-  padding: 20px;
-}
+    body {
+      font-family: 'Barlow', sans-serif;
+      background: var(--dark);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      overflow-x: hidden;
+    }
 
-h1 {
-  font-family: 'Bebas Neue', sans-serif;
-  text-align: center;
-}
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 110%, rgba(255,107,0,0.18) 0%, rgba(200,16,46,0.08) 40%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
 
-.card {
-  background: #1A1410;
-  padding: 20px;
-  border-radius: 12px;
-  margin-top: 20px;
-}
+    .app {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 460px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
 
-button {
-  width: 100%;
-  padding: 12px;
-  margin-top: 10px;
-  border: none;
-  border-radius: 10px;
-  background: #FF3D00;
-  color: white;
-  font-weight: bold;
-  cursor: pointer;
-  transition: opacity 0.15s;
-}
+    /* header */
+    .logo-flame {
+      font-size: 38px;
+      text-align: center;
+      animation: flicker 2s ease-in-out infinite;
+    }
+    @keyframes flicker {
+      0%,100% { opacity: 1; transform: scaleY(1); }
+      50% { opacity: 0.85; transform: scaleY(0.96); }
+    }
 
-button:hover:not(:disabled) {
-  opacity: 0.9;
-}
+    h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 48px;
+      letter-spacing: 4px;
+      text-align: center;
+      background: linear-gradient(135deg, var(--gold) 0%, var(--fire) 50%, var(--flame) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1;
+      margin: 2px 0 4px;
+    }
 
-button:disabled {
-  cursor: default;
-  opacity: 0.6;
-}
+    .subtitle {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 14px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-align: center;
+    }
 
-button.correct {
-  background: #2ECC71 !important;
-  opacity: 1 !important;
-  color: #0D0D0D;
-}
+    /* card */
+    .card {
+      background: linear-gradient(145deg, #1E1510, #24180E);
+      border: 1px solid rgba(255,107,0,0.15);
+      border-radius: 28px;
+      padding: 24px 20px;
+      box-shadow: 0 20px 35px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,184,0,0.1);
+      backdrop-filter: blur(2px);
+    }
 
-button.wrong {
-  background: #C0392B !important;
-  opacity: 1 !important;
-}
+    #question {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 24px;
+      font-weight: 700;
+      line-height: 1.3;
+      margin-bottom: 20px;
+      min-height: 70px;
+      display: flex;
+      align-items: center;
+      color: var(--text);
+    }
 
-#feedback {
-  margin-top: 14px;
-  padding: 12px 14px;
-  border-radius: 10px;
-  font-size: 0.95rem;
-  line-height: 1.4;
-  font-weight: 600;
-  display: none;
-}
+    #options {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
 
-#feedback.correct-fb {
-  background: #1a3d2b;
-  border-left: 4px solid #2ECC71;
-  color: #7DFFB3;
-  display: block;
-}
+    button.opt-btn {
+      width: 100%;
+      padding: 16px 18px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.03);
+      color: var(--text);
+      font-family: 'Barlow', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.25s;
+      letter-spacing: 0.3px;
+    }
 
-#feedback.wrong-fb {
-  background: #3d1a1a;
-  border-left: 4px solid #C0392B;
-  color: #FFB3B3;
-  display: block;
-}
+    button.opt-btn:hover:not(:disabled) {
+      border-color: var(--fire);
+      background: rgba(255,107,0,0.12);
+      transform: translateX(4px);
+    }
 
-.hidden { display: none; }
-</style>
+    button.opt-btn.correct {
+      background: #2a5a3a;
+      border-color: #4CAF50;
+      color: #D4EDDA;
+      font-weight: 700;
+    }
+
+    button.opt-btn.wrong {
+      background: #4a2020;
+      border-color: var(--red);
+      color: #F8D7DA;
+      font-weight: 700;
+    }
+
+    button.opt-btn:disabled {
+      cursor: default;
+      opacity: 0.9;
+    }
+
+    #feedback {
+      margin: 16px 0 12px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      font-size: 0.95rem;
+      line-height: 1.5;
+      font-weight: 600;
+      display: none;
+      animation: fadeSlide 0.3s ease;
+    }
+
+    #feedback.correct-fb {
+      background: rgba(46, 125, 50, 0.18);
+      border-left: 4px solid #4CAF50;
+      color: #B9F6CA;
+      display: block;
+    }
+
+    #feedback.wrong-fb {
+      background: rgba(198, 40, 40, 0.18);
+      border-left: 4px solid #EF5350;
+      color: #FFCDD2;
+      display: block;
+    }
+
+    @keyframes fadeSlide {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    #nextBtn {
+      width: 100%;
+      padding: 16px;
+      border: none;
+      border-radius: 16px;
+      background: linear-gradient(135deg, var(--flame), var(--fire));
+      color: white;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 8px 22px rgba(255,61,0,0.45);
+      margin-top: 6px;
+    }
+
+    #nextBtn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 26px rgba(255,61,0,0.6);
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .score-screen {
+      text-align: center;
+      padding: 10px 0;
+    }
+
+    .score-screen h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.3rem;
+      letter-spacing: 2px;
+      color: var(--gold);
+      margin-bottom: 12px;
+    }
+
+    .restart-btn {
+      background: linear-gradient(135deg, var(--flame), var(--fire));
+      border: none;
+      padding: 14px 28px;
+      border-radius: 40px;
+      color: white;
+      font-weight: 700;
+      font-size: 1.1rem;
+      letter-spacing: 1.5px;
+      cursor: pointer;
+      margin-top: 18px;
+      box-shadow: 0 6px 18px rgba(255,61,0,0.5);
+    }
+  </style>
 </head>
-
 <body>
+<div class="app">
+  <div>
+    <div class="logo-flame">🔥</div>
+    <h1>FLAME PREP</h1>
+    <p class="subtitle">Made for you, Jordan — go get that manager spot ❤️</p>
+  </div>
 
-<h1>🔥 FLAME PREP</h1>
-<p style="text-align:center;">Made for you, babe — go get that job ❤️</p>
-
-<div class="card" id="quiz-card">
-  <div id="question"></div>
-  <div id="options"></div>
-  <div id="feedback" style="margin-top:10px;"></div>
-  <button id="nextBtn" class="hidden">Next →</button>
+  <div class="card" id="quiz-card">
+    <div id="question"></div>
+    <div id="options"></div>
+    <div id="feedback"></div>
+    <button id="nextBtn" class="hidden">Next →</button>
+  </div>
 </div>
 
 <script>
+  (function() {
+    // ----- FULL BURGER KING QUESTION BANK (tailored for Jordan) -----
+    const quizData = [
+      { q: "Jordan, what temperature must hot food be held above to stay safe?", opts: ["120°F","130°F","140°F","150°F"], ans: 2, exp: "Hot food stays above 140°F — danger zone is below that. You know your HAACP, babe." },
+      { q: "Jordan, FIFO stands for:", opts: ["First In, First Out","Food In, Food Out","Fast Inventory, Fast Operations","First Inspection, Final Order"], ans: 0, exp: "First In, First Out. Older stock moves front. That’s how you cut waste, Craig." },
+      { q: "Jordan, cold food must be kept below what temperature?", opts: ["50°F","45°F","41°F","35°F"], ans: 2, exp: "41°F is the line. Above that bacteria wakes up. You’re solid on this." },
+      { q: "Jordan, Burger King’s brand tagline is:", opts: ["I'm Lovin' It","Eat Fresh","Be Your Way","Taste the Fire"], ans: 2, exp: "‘Be Your Way’ — individuality and flame-grilled freedom. Own that in your interview." },
+      { q: "Jordan, what is the target food cost percentage for a QSR like BK?", opts: ["15-20%","28-32%","40-45%","50%+"], ans: 1, exp: "28–32% is where you want it. Food cost ÷ sales × 100. You’re thinking like a GM already." },
+      { q: "Jordan, a customer says their Whopper is wrong. Your very first move?", opts: ["Ask for receipt","Tell them to check next time","Apologize and replace immediately","Offer discount next visit"], ans: 2, exp: "Replace it instantly, no friction. Turn that frustration into loyalty, babe." },
+      { q: "Jordan, labor cost typically runs what % of revenue?", opts: ["10-15%","25-35%","45-50%","55-60%"], ans: 1, exp: "25–35%. Smart scheduling protects your P&L. You’ve got this." },
+      { q: "Jordan, BK’s customer satisfaction tracking system is called?", opts: ["Net Promoter Score","Guest Trac","CSAT Dashboard","Mystery Audit Pro"], ans: 1, exp: "Guest Trac — speed, accuracy, cleanliness. You’ll use it every week." },
+      { q: "Jordan, two crew members arguing loudly in the kitchen. Best first step?", opts: ["Fire them both","Let them work it out","Separate them, talk privately","Ignore if they’re still working"], ans: 2, exp: "Separate and address privately. Protect the floor energy — that’s leadership." },
+      { q: "Jordan, what makes BK’s cooking method unique in QSR?", opts: ["Deep frying","Steam cooking","Flame-grilling","Air frying"], ans: 2, exp: "Flame-grilling. Nobody else does it. That’s your competitive edge, Craig." },
+      { q: "Jordan, how do you handle a rush with low staffing?", opts: ["Call the GM","Prioritize drive-thru & cross-train flex","Close the lobby","Wait for more people"], ans: 1, exp: "Prioritize drive-thru speed, flex your best people. Stay calm — your vibe sets the tone." },
+      { q: "Jordan, what does ‘leading by example’ look like on your shift?", opts: ["Staying in the office","Jumping on floor during peak","Watching cameras","Only delegating"], ans: 1, exp: "Getting your hands dirty. If you move fast and stay positive, the team mirrors it." }
+    ];
 
-// ================= DATA =================
-const quizData = [
-  {
-    q: "Jordan, what temp should hot food be held above?",
-    opts: ["120°F","130°F","140°F","150°F"],
-    ans: 2,
-    exp: "Hot food stays above 140°F to stay safe."
-  },
-  {
-    q: "FIFO stands for?",
-    opts: ["First In First Out","Food In Food Out","Fast Inventory","Final Order"],
-    ans: 0,
-    exp: "First In, First Out — keeps food fresh and reduces waste."
-  },
-  {
-    q: "Cold food must stay below?",
-    opts: ["50°F","45°F","41°F","35°F"],
-    ans: 2,
-    exp: "41°F is the safety line."
-  }
-];
+    // ----- TONE & ENCOURAGEMENT (personalized for Jordan / Craig / goober) -----
+    const correctEncouragements = [
+      "That’s right, babe 😌", "Yesss Jordan, that’s exactly it", "I knew you’d get that 💪",
+      "Okay Craig, I see you 👀", "That’s my man right there ❤️", "Good job babe, keep going",
+      "You’re locked in now 🔥", "See? You know this", "Look at you go, goober 😄",
+      "Yes!! That’s it Jordan ✅", "Flame on, babe 🔥", "You’re interview-ready"
+    ];
 
-// ================= ENCOURAGEMENT =================
-const correctEncouragements = [
-  "That’s right, babe 😌",
-  "Yesss Jordan, that’s exactly it",
-  "I knew you’d get that 💪",
-  "Okay Craig, I see you 👀",
-  "That’s my man right there ❤️",
-  "Good job babe, keep going",
-  "You’re locked in now 🔥",
-  "See? You know this",
-  "Look at you go, goober 😄",
-  "Yes!! That’s it Jordan ✅",
-];
+    const wrongEncouragements = [
+      "It’s okay babe, you’re learning", "Almost, Jordan — you got this", "Don’t overthink it, Craig",
+      "You’re right there, just tighten it up", "Shake it off, next one", "It’s all good babe, keep going",
+      "You’re still doing great ❤️", "Come on goober, you know this 😤", "I believe in you, Jordan — reset and go",
+      "No stress, we drill it next round"
+    ];
 
-const wrongEncouragements = [
-  "It’s okay babe, you’re learning",
-  "Almost, Jordan — you got this",
-  "Don’t overthink it, Craig",
-  "You’re right there, just tighten it up",
-  "Shake it off, next one",
-  "It’s all good babe, keep going",
-  "You’re still doing great ❤️",
-  "Come on goober, you know this 😤",
-  "I believe in you, Jordan — reset and go",
-];
+    const miniBoosts = [
+      "Stay focused babe, you’re doing good", "Keep going Jordan, I’m proud of you",
+      "One more step closer, Craig", "You got this, don’t second guess yourself",
+      "Right here with you ❤️", "Don’t stop now, goober 🔥", "You’re so close, babe — keep it up",
+      "Lock in, Jordan. Next one’s yours."
+    ];
 
-const miniBoosts = [
-  "Stay focused babe, you’re doing good",
-  "Keep going Jordan, I’m proud of you",
-  "One more step closer, Craig",
-  "You got this, don’t second guess yourself",
-  "Right here with you ❤️",
-  "Don’t stop now, goober 🔥",
-  "You’re so close, babe — keep it up",
-];
+    const weakSpotIntros = [
+      "Okay Jordan, let’s drill your weak spots 🎯", "Back on these, Craig — lock it in 💪",
+      "A few more to tighten up, babe — you got it", "Let’s nail these ones, goober 🔥",
+      "Weak spot round — this is where champs are made, Jordan"
+    ];
 
-const weakSpotIntros = [
-  "Okay Jordan, let’s drill your weak spots 🎯",
-  "Back on these, Craig — lock it in 💪",
-  "A few more to tighten up, babe — you got it",
-  "Let’s nail these ones, goober 🔥",
-];
+    function getRandom(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 
-function getRandom(arr) {
-  return arr[Math.floor(Math.random() * arr.length)];
-}
-
-function shuffle(arr) {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}
-
-// ================= STATE =================
-const TOTAL = quizData.length;
-const MAX_DRILL_ROUNDS = 3;
-
-let queue = shuffle(quizData);
-let weakSpots = [];
-let queueIndex = 0;
-let roundNum = 1;
-let firstPassScore = 0;
-let answered = false;
-
-// ================= LOAD =================
-function loadQuestion() {
-  answered = false;
-  const q = queue[queueIndex];
-
-  document.getElementById("question").textContent = q.q;
-
-  const fb = document.getElementById("feedback");
-  fb.textContent = "";
-  fb.className = "";
-
-  document.getElementById("nextBtn").classList.add("hidden");
-
-  const optWrap = document.getElementById("options");
-  optWrap.innerHTML = "";
-
-  q.opts.forEach((opt, i) => {
-    const btn = document.createElement("button");
-    btn.textContent = opt;
-    btn.onclick = () => answer(i);
-    optWrap.appendChild(btn);
-  });
-}
-
-// ================= ANSWER =================
-function answer(choice) {
-  if (answered) return;
-  answered = true;
-
-  const q = queue[queueIndex];
-  const fb = document.getElementById("feedback");
-  const btns = document.querySelectorAll("#options button");
-
-  btns.forEach((btn, i) => {
-    btn.disabled = true;
-    if (i === q.ans) btn.classList.add("correct");
-    if (i === choice && choice !== q.ans) btn.classList.add("wrong");
-  });
-
-  if (choice === q.ans) {
-    if (roundNum === 1) firstPassScore++;
-    fb.className = "correct-fb";
-    fb.textContent = getRandom(correctEncouragements) + " — " + q.exp;
-  } else {
-    weakSpots.push(q);
-    fb.className = "wrong-fb";
-    fb.textContent = getRandom(wrongEncouragements) + " — " + q.exp;
-  }
-
-  document.getElementById("nextBtn").classList.remove("hidden");
-}
-
-// ================= NEXT =================
-document.getElementById("nextBtn").onclick = () => {
-  queueIndex++;
-
-  if (queueIndex >= queue.length) {
-    if (weakSpots.length === 0 || roundNum >= MAX_DRILL_ROUNDS) {
-      showFinalScore();
-    } else {
-      startDrillRound();
+    function shuffle(arr) {
+      const a = [...arr];
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
     }
-    return;
-  }
 
-  document.getElementById("question").textContent = getRandom(miniBoosts);
-  document.getElementById("feedback").className = "";
-  document.getElementById("feedback").textContent = "";
+    // ----- STATE -----
+    const TOTAL_QUESTIONS = quizData.length;
+    const MAX_DRILL_ROUNDS = 3;   // drill weak spots up to 3 times
 
-  setTimeout(loadQuestion, 900);
-};
+    let queue = shuffle(quizData);
+    let weakSpots = [];
+    let queueIndex = 0;
+    let roundNum = 1;
+    let firstPassScore = 0;
+    let answered = false;
 
-// ================= DRILL ROUND =================
-function startDrillRound() {
-  roundNum++;
-  queue = shuffle(weakSpots);
-  weakSpots = [];
-  queueIndex = 0;
+    // DOM elements
+    const questionEl = document.getElementById('question');
+    const optionsEl = document.getElementById('options');
+    const feedbackEl = document.getElementById('feedback');
+    const nextBtn = document.getElementById('nextBtn');
+    const quizCard = document.getElementById('quiz-card');
 
-  const intro = getRandom(weakSpotIntros);
-  document.getElementById("question").textContent = intro;
-  document.getElementById("options").innerHTML = "";
-  document.getElementById("feedback").className = "";
-  document.getElementById("feedback").textContent = "";
-  document.getElementById("nextBtn").classList.add("hidden");
+    // ----- LOAD QUESTION -----
+    function loadQuestion() {
+      answered = false;
+      const q = queue[queueIndex];
 
-  setTimeout(loadQuestion, 1100);
-}
+      questionEl.textContent = q.q;
 
-// ================= FINAL SCORE =================
-function showFinalScore() {
-  const pct = Math.round((firstPassScore / TOTAL) * 100);
-  const clearedAll = weakSpots.length === 0;
+      // reset feedback
+      feedbackEl.textContent = '';
+      feedbackEl.className = '';
+      nextBtn.classList.add('hidden');
 
-  let closing;
-  if (firstPassScore === TOTAL) {
-    closing = "Perfect score, Jordan!! I’m so proud of you 🏆❤️";
-  } else if (clearedAll && roundNum > 1) {
-    closing = "You drilled those weak spots and locked it in, babe 🔒🔥";
-  } else if (firstPassScore >= TOTAL / 2) {
-    closing = getRandom(correctEncouragements);
-  } else {
-    closing = "It’s okay babe — we run it back and you’ll nail it 💪";
-  }
+      // build option buttons
+      optionsEl.innerHTML = '';
+      q.opts.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'opt-btn';
+        btn.textContent = opt;
+        btn.addEventListener('click', () => handleAnswer(idx));
+        optionsEl.appendChild(btn);
+      });
+    }
 
-  const drillNote = roundNum > 1
-    ? `<p style="font-size:0.9rem;opacity:0.65;margin-top:6px;">
-         Drilled weak spots ${roundNum - 1}x — ${clearedAll ? "all cleared ✅" : "keep grinding 💪"}
-       </p>`
-    : "";
+    // ----- HANDLE ANSWER -----
+    function handleAnswer(choice) {
+      if (answered) return;
+      answered = true;
 
-  document.getElementById("quiz-card").innerHTML =
-    `<h2 style="font-family:’Bebas Neue’,sans-serif;font-size:2rem;">${closing}</h2>
-     <p style="font-size:1.2rem;margin-top:8px;">First pass: <strong>${firstPassScore}/${TOTAL}</strong> (${pct}%), babe ❤️</p>
-     ${drillNote}
-     <button onclick="location.reload()" style="margin-top:20px;">Run it back 🔁</button>`;
-}
+      const q = queue[queueIndex];
+      const btns = document.querySelectorAll('.opt-btn');
 
-// INIT
-loadQuestion();
+      // disable all buttons & mark correct/wrong
+      btns.forEach((btn, idx) => {
+        btn.disabled = true;
+        if (idx === q.ans) btn.classList.add('correct');
+        if (idx === choice && choice !== q.ans) btn.classList.add('wrong');
+      });
 
+      // process result
+      if (choice === q.ans) {
+        if (roundNum === 1) firstPassScore++;
+        feedbackEl.className = 'correct-fb';
+        feedbackEl.textContent = getRandom(correctEncouragements) + " — " + q.exp;
+      } else {
+        // add to weak spots (avoid duplicates in same drill)
+        if (!weakSpots.some(item => item.q === q.q)) {
+          weakSpots.push(q);
+        }
+        feedbackEl.className = 'wrong-fb';
+        feedbackEl.textContent = getRandom(wrongEncouragements) + " — " + q.exp;
+      }
+
+      nextBtn.classList.remove('hidden');
+    }
+
+    // ----- NEXT QUESTION / DRILL LOGIC -----
+    function goNext() {
+      queueIndex++;
+
+      // if we finished current queue
+      if (queueIndex >= queue.length) {
+        // if there are weak spots and we haven't exceeded drill rounds
+        if (weakSpots.length > 0 && roundNum < MAX_DRILL_ROUNDS) {
+          startDrillRound();
+          return;
+        }
+        // otherwise show final score
+        showFinalScreen();
+        return;
+      }
+
+      // still questions in current queue → show mini boost then load
+      questionEl.textContent = getRandom(miniBoosts);
+      feedbackEl.className = '';
+      feedbackEl.textContent = '';
+      optionsEl.innerHTML = '';
+      nextBtn.classList.add('hidden');
+
+      setTimeout(() => {
+        loadQuestion();
+      }, 950);
+    }
+
+    // ----- DRILL ROUND (weak spots only) -----
+    function startDrillRound() {
+      roundNum++;
+      // new queue from weak spots, shuffle them
+      queue = shuffle([...weakSpots]);
+      weakSpots = [];   // reset for this round
+      queueIndex = 0;
+
+      const intro = getRandom(weakSpotIntros);
+      questionEl.textContent = intro;
+      optionsEl.innerHTML = '';
+      feedbackEl.className = '';
+      feedbackEl.textContent = '';
+      nextBtn.classList.add('hidden');
+
+      setTimeout(() => {
+        loadQuestion();
+      }, 1200);
+    }
+
+    // ----- FINAL SCREEN (drill complete or max rounds) -----
+    function showFinalScreen() {
+      const pct = Math.round((firstPassScore / TOTAL_QUESTIONS) * 100);
+      const clearedAll = (weakSpots.length === 0 && roundNum > 1) || (firstPassScore === TOTAL_QUESTIONS);
+
+      let closingMessage = '';
+      if (firstPassScore === TOTAL_QUESTIONS) {
+        closingMessage = "Perfect score, Jordan!! I’m so proud of you 🏆❤️";
+      } else if (clearedAll && roundNum > 1) {
+        closingMessage = "You drilled those weak spots and locked it in, babe 🔒🔥";
+      } else if (firstPassScore >= TOTAL_QUESTIONS / 2) {
+        closingMessage = getRandom(correctEncouragements) + " — you're ready.";
+      } else {
+        closingMessage = "It’s okay babe — we run it back and you’ll nail it 💪";
+      }
+
+      const drillNote = (roundNum > 1) 
+        ? `<p style="font-size:0.9rem; opacity:0.7; margin-top:10px;">Drilled weak spots ${roundNum - 1}x — ${clearedAll ? 'all cleared ✅' : 'keep grinding 💪'}</p>` 
+        : '';
+
+      quizCard.innerHTML = `
+        <div class="score-screen">
+          <h2>${closingMessage}</h2>
+          <p style="font-size:1.3rem; margin:12px 0;">First pass: <strong>${firstPassScore}/${TOTAL_QUESTIONS}</strong> (${pct}%)</p>
+          ${drillNote}
+          <button class="restart-btn" onclick="location.reload()">🔥 Run it back, Craig</button>
+        </div>
+      `;
+    }
+
+    // attach next button listener
+    nextBtn.addEventListener('click', goNext);
+
+    // initial load
+    loadQuestion();
+  })();
 </script>
-
 </body>
 </html>
