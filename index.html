@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FLAME PREP</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;600;700&family=Barlow+Condensed:wght@700;900&display=swap" rel="stylesheet">
+
+<style>
+body {
+  font-family: 'Barlow', sans-serif;
+  background: #0D0D0D;
+  color: #F5EFE6;
+  max-width: 480px;
+  margin: auto;
+  padding: 20px;
+}
+
+h1 {
+  font-family: 'Bebas Neue', sans-serif;
+  text-align: center;
+}
+
+.card {
+  background: #1A1410;
+  padding: 20px;
+  border-radius: 12px;
+  margin-top: 20px;
+}
+
+button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 10px;
+  background: #FF3D00;
+  color: white;
+  font-weight: bold;
+}
+
+button:hover {
+  opacity: 0.9;
+}
+
+.hidden { display: none; }
+</style>
+</head>
+
+<body>
+
+<h1>🔥 FLAME PREP</h1>
+<p style="text-align:center;">Made for you, babe — go get that job ❤️</p>
+
+<div class="card" id="quiz-card">
+  <div id="question"></div>
+  <div id="options"></div>
+  <div id="feedback" style="margin-top:10px;"></div>
+  <button id="nextBtn" class="hidden">Next →</button>
+</div>
+
+<script>
+
+// ================= DATA =================
+const quizData = [
+  {
+    q: "Jordan, what temp should hot food be held above?",
+    opts: ["120°F","130°F","140°F","150°F"],
+    ans: 2,
+    exp: "Hot food stays above 140°F to stay safe."
+  },
+  {
+    q: "FIFO stands for?",
+    opts: ["First In First Out","Food In Food Out","Fast Inventory","Final Order"],
+    ans: 0,
+    exp: "First In, First Out — keeps food fresh and reduces waste."
+  },
+  {
+    q: "Cold food must stay below?",
+    opts: ["50°F","45°F","41°F","35°F"],
+    ans: 2,
+    exp: "41°F is the safety line."
+  }
+];
+
+// ================= ENCOURAGEMENT =================
+const correctEncouragements = [
+  "That’s right, babe 😌",
+  "Yesss Jordan, that’s exactly it",
+  "I knew you’d get that 💪",
+  "Okay Craig, I see you 👀",
+  "That’s my man right there ❤️",
+  "Good job babe, keep going",
+  "You’re locked in now 🔥",
+  "See? You know this",
+];
+
+const wrongEncouragements = [
+  "It’s okay babe, you’re learning",
+  "Almost, Jordan — you got this",
+  "Don’t overthink it, Craig",
+  "You’re right there, just tighten it up",
+  "Shake it off, next one",
+  "It’s all good babe, keep going",
+  "You’re still doing great ❤️",
+];
+
+const miniBoosts = [
+  "Stay focused babe, you’re doing good",
+  "Keep going Jordan, I’m proud of you",
+  "One more step closer, Craig",
+  "You got this, don’t second guess yourself",
+  "Right here with you ❤️",
+];
+
+function getRandom(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+// ================= STATE =================
+let index = 0;
+let score = 0;
+
+// ================= LOAD =================
+function loadQuestion() {
+  const q = quizData[index];
+
+  document.getElementById("question").textContent = q.q;
+  document.getElementById("feedback").textContent = "";
+  document.getElementById("nextBtn").classList.add("hidden");
+
+  const optWrap = document.getElementById("options");
+  optWrap.innerHTML = "";
+
+  q.opts.forEach((opt, i) => {
+    const btn = document.createElement("button");
+    btn.textContent = opt;
+    btn.onclick = () => answer(i);
+    optWrap.appendChild(btn);
+  });
+}
+
+// ================= ANSWER =================
+function answer(choice) {
+  const q = quizData[index];
+  const fb = document.getElementById("feedback");
+
+  if (choice === q.ans) {
+    score++;
+    fb.textContent = getRandom(correctEncouragements) + " — " + q.exp;
+  } else {
+    fb.textContent = getRandom(wrongEncouragements) + " — " + q.exp;
+  }
+
+  document.getElementById("nextBtn").classList.remove("hidden");
+}
+
+// ================= NEXT =================
+document.getElementById("nextBtn").onclick = () => {
+  index++;
+
+  if (index >= quizData.length) {
+    document.getElementById("quiz-card").innerHTML =
+      `<h2>${getRandom(correctEncouragements)}</h2>
+       <p>You got ${score}/${quizData.length}, babe ❤️</p>`;
+    return;
+  }
+
+  // mini emotional boost before next question
+  document.getElementById("question").textContent = getRandom(miniBoosts);
+
+  setTimeout(loadQuestion, 900);
+};
+
+// INIT
+loadQuestion();
+
+</script>
+
+</body>
+</html>
