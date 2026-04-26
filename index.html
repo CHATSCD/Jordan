@@ -162,19 +162,41 @@ const miniBoosts = [
   "You’re so close, babe — keep it up",
 ];
 
+const weakSpotIntros = [
+  "Okay Jordan, let’s drill your weak spots 🎯",
+  "Back on these, Craig — lock it in 💪",
+  "A few more to tighten up, babe — you got it",
+  "Let’s nail these ones, goober 🔥",
+];
+
 function getRandom(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
 // ================= STATE =================
-let index = 0;
-let score = 0;
+const TOTAL = quizData.length;
+const MAX_DRILL_ROUNDS = 3;
+
+let queue = shuffle(quizData);
+let weakSpots = [];
+let queueIndex = 0;
+let roundNum = 1;
+let firstPassScore = 0;
 let answered = false;
 
 // ================= LOAD =================
 function loadQuestion() {
   answered = false;
-  const q = quizData[index];
+  const q = queue[queueIndex];
 
   document.getElementById("question").textContent = q.q;
 
@@ -200,7 +222,7 @@ function answer(choice) {
   if (answered) return;
   answered = true;
 
-  const q = quizData[index];
+  const q = queue[queueIndex];
   const fb = document.getElementById("feedback");
   const btns = document.querySelectorAll("#options button");
 
@@ -211,10 +233,11 @@ function answer(choice) {
   });
 
   if (choice === q.ans) {
-    score++;
+    if (roundNum === 1) firstPassScore++;
     fb.className = "correct-fb";
     fb.textContent = getRandom(correctEncouragements) + " — " + q.exp;
   } else {
+    weakSpots.push(q);
     fb.className = "wrong-fb";
     fb.textContent = getRandom(wrongEncouragements) + " — " + q.exp;
   }
@@ -224,20 +247,14 @@ function answer(choice) {
 
 // ================= NEXT =================
 document.getElementById("nextBtn").onclick = () => {
-  index++;
+  queueIndex++;
 
-  if (index >= quizData.length) {
-    const pct = Math.round((score / quizData.length) * 100);
-    const closing = score === quizData.length
-      ? "Perfect score, Jordan!! I'm so proud of you 🏆❤️"
-      : score >= quizData.length / 2
-        ? getRandom(correctEncouragements)
-        : "It's okay babe — we run it back and you'll nail it 💪";
-
-    document.getElementById("quiz-card").innerHTML =
-      `<h2 style="font-family:'Bebas Neue',sans-serif;font-size:2rem;">${closing}</h2>
-       <p style="font-size:1.2rem;margin-top:8px;">You got <strong>${score}/${quizData.length}</strong> (${pct}%), babe ❤️</p>
-       <button onclick="location.reload()" style="margin-top:20px;">Run it back 🔁</button>`;
+  if (queueIndex >= queue.length) {
+    if (weakSpots.length === 0 || roundNum >= MAX_DRILL_ROUNDS) {
+      showFinalScore();
+    } else {
+      startDrillRound();
+    }
     return;
   }
 
@@ -247,6 +264,52 @@ document.getElementById("nextBtn").onclick = () => {
 
   setTimeout(loadQuestion, 900);
 };
+
+// ================= DRILL ROUND =================
+function startDrillRound() {
+  roundNum++;
+  queue = shuffle(weakSpots);
+  weakSpots = [];
+  queueIndex = 0;
+
+  const intro = getRandom(weakSpotIntros);
+  document.getElementById("question").textContent = intro;
+  document.getElementById("options").innerHTML = "";
+  document.getElementById("feedback").className = "";
+  document.getElementById("feedback").textContent = "";
+  document.getElementById("nextBtn").classList.add("hidden");
+
+  setTimeout(loadQuestion, 1100);
+}
+
+// ================= FINAL SCORE =================
+function showFinalScore() {
+  const pct = Math.round((firstPassScore / TOTAL) * 100);
+  const clearedAll = weakSpots.length === 0;
+
+  let closing;
+  if (firstPassScore === TOTAL) {
+    closing = "Perfect score, Jordan!! I’m so proud of you 🏆❤️";
+  } else if (clearedAll && roundNum > 1) {
+    closing = "You drilled those weak spots and locked it in, babe 🔒🔥";
+  } else if (firstPassScore >= TOTAL / 2) {
+    closing = getRandom(correctEncouragements);
+  } else {
+    closing = "It’s okay babe — we run it back and you’ll nail it 💪";
+  }
+
+  const drillNote = roundNum > 1
+    ? `<p style="font-size:0.9rem;opacity:0.65;margin-top:6px;">
+         Drilled weak spots ${roundNum - 1}x — ${clearedAll ? "all cleared ✅" : "keep grinding 💪"}
+       </p>`
+    : "";
+
+  document.getElementById("quiz-card").innerHTML =
+    `<h2 style="font-family:’Bebas Neue’,sans-serif;font-size:2rem;">${closing}</h2>
+     <p style="font-size:1.2rem;margin-top:8px;">First pass: <strong>${firstPassScore}/${TOTAL}</strong> (${pct}%), babe ❤️</p>
+     ${drillNote}
+     <button onclick="location.reload()" style="margin-top:20px;">Run it back 🔁</button>`;
+}
 
 // INIT
 loadQuestion();
